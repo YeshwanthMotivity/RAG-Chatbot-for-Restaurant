@@ -27,6 +27,7 @@ Feed retrieved context + query into DialoGPT-small to get the final response.
 
 
 📸 Architecture Diagram
+![Building LLM application using RAG - by Sagar Gandhi](https://github.com/user-attachments/assets/ed66e623-e3d4-4d7f-8d90-971f29771dfe)
 
 💻 How to Run
 1. Clone the repository:
