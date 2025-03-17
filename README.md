@@ -30,7 +30,7 @@ Feed retrieved context + query into DialoGPT-small to get the final response.
 
 💻 How to Run
 1. Clone the repository:
-git clone https://github.com/your-username/RAG-Restaurant-Chatbot.git
+git clone https://github.com/YeshwanthMotivity/RAG-Chatbot-for-Restaurant-Support.git
 cd RAG-Restaurant-Chatbot
 2. Install dependencies:
 pip install -r requirements.txt
