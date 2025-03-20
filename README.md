@@ -32,10 +32,7 @@ Feed retrieved context + query into DialoGPT-small to get the final response.
 💻 How to Run
 1. Clone the repository:
 git clone https://github.com/YeshwanthMotivity/RAG-Chatbot-for-Restaurant-Support.git
-cd RAG-Restaurant-Chatbot
-2. Install dependencies:
-pip install -r requirements.txt
-3. Rum the notebook:
+2. Rum the notebook:
 Open Rag_Chatbot.ipynb in Jupyter Notebook
 Execute the cells step by step.
 Follow step-by-step execution
