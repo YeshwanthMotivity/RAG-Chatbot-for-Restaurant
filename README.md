@@ -54,6 +54,13 @@ Follow step-by-step execution
 
 ---
 
+## 📬  About the Team
+• Mentor / Manager: Mr. Venkata Ramana Sudhakar Polavarapu
+
+• Team Members: Yeshwanth Goud Mudimala, Sai Dinesh Bejjanki, Uma Venkata Karthik Vallabhaneni, Pushpaja Udayagiri, Sai Seetu Reddy Bommareddy
+
+---
+
 ### 📬 Contact
 For any questions, feel free to reach out at:
 
