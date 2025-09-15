@@ -56,4 +56,5 @@ Follow step-by-step execution
 
 ## 📬 Contact
 For any questions, feel free to reach out at:
-Email 📧: yeshwanth.mudimala@motivitylabs.com
+
+**Email 📧:** yeshwanth.mudimala@motivitylabs.com
