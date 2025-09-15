@@ -13,7 +13,6 @@ A Retrieval-Augmented Generation (RAG) Chatbot for a restaurant is a project des
 ---
 
 ### 🛠️ Tech Stack
-
 | Component          |       Tool / Library         |                                 Purpose                        |
 | ------------------ | ---------------------------- | -------------------------------------------------------------- |
 | **Embeddings**     | `SentenceTransformer`        | Creates semantic vectors from text.                            |
