@@ -3,7 +3,7 @@ A Retrieval-Augmented Generation (RAG) Chatbot for a restaurant is a project des
 
 ---
 
-## 🚀 Features
+### 🚀 Features
 1. **Semantic Search**: Utilizes embeddings and a vector index (FAISS) to find the most relevant information for a given query.
 2. **AI-Powered Responses**: Generates conversational and context-aware answers using the DialoGPT-small model.
 3. **Handles FAQs**: The chatbot is trained to handle common questions about the restaurant's menu, contact information, and operating hours.
@@ -22,7 +22,7 @@ A Retrieval-Augmented Generation (RAG) Chatbot for a restaurant is a project des
 
 ---
 
-## 📄 How It Works
+### 📄 How It Works
 1. **Loads Documents**: The chatbot first loads a set of static restaurant documents (e.g., menus, FAQs, policies).
 2. **Generates Embeddings**: A sentence transformer model creates numerical embeddings for each document.
 3. **Stores in FAISS:** These embeddings are stored in a FAISS index to enable fast and efficient similarity search.
@@ -31,7 +31,7 @@ A Retrieval-Augmented Generation (RAG) Chatbot for a restaurant is a project des
    
 ---
 
-## 📸 Architecture Diagram
+### 📸 Architecture Diagram
 ![Building LLM application using RAG - by Sagar Gandhi](https://github.com/user-attachments/assets/ed66e623-e3d4-4d7f-8d90-971f29771dfe)
 
 ---
@@ -47,14 +47,14 @@ Follow step-by-step execution
 
 ---
 
-## 📈 Future Scope
+### 📈 Future Scope
 1. **Web Deployment:** Deploy the chatbot as a web application using frameworks like Flask, FastAPI, or Streamlit.
 2. **Multi-Turn Conversations:** Add a feature to remember previous interactions for more natural conversations.
 3. **Dynamic Updates:** Implement support for automatically updating documents as new information becomes available.
 
 ---
 
-## 📬 Contact
+### 📬 Contact
 For any questions, feel free to reach out at:
 
 **Email 📧:** yeshwanth.mudimala@motivitylabs.com
