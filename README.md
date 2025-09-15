@@ -1,10 +1,9 @@
-# RAG-Chatbot-for-Restaurant-Support
-🧠 RAG-Restaurant-Chatbot
+# 🧠 RAG-Chatbot-for-Restaurant-Support
 A Retrieval-Augmented Generation (RAG) Chatbot for a restaurant is a project designed to help users get quick, accurate answers to questions about the restaurant's menu, services, and policies. It combines semantic search with a language model to provide context-aware responses, making it more intelligent than a traditional chatbot.
 
 ---
 
- ## Features
+## 🚀 Features
 1. Semantic Search: Utilizes embeddings and a vector index (FAISS) to find the most relevant information for a given query.
 2. AI-Powered Responses: Generates conversational and context-aware answers using the DialoGPT-small model.
 3. Handles FAQs: The chatbot is trained to handle common questions about the restaurant's menu, contact information, and operating hours.
