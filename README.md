@@ -58,9 +58,16 @@ Contributions are welcome!
 2. Create a feature branch.
 3. Commit your changes.
 4. Submit a pull request.
+          
+## Team
 
-## Author
+**Mentor / Manager:**
+- **Mr. Venkata Ramana Sudhakar Polavarapu**
 
-**Yeshwanth Goud**
-
-*Data Scientist | Full Stack & ML Enthusiast*
+**Team Members:**
+- Yeshwanth Goud Mudimala
+- Sai Dinesh Bejjanki 
+- Uma Venkata Karthik Vallabhaneni
+- Pushpaja Udayagiri
+- Sai Seetu Reddy Bommareddy
+---
