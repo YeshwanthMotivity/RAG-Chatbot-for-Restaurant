@@ -1,0 +1,290 @@
+Run this code in google collab 
+!pip install gradio sentence-transformers faiss-cpu
+
+# Golden Fork Bistro data
+documents = [
+    "Welcome to The Golden Fork Bistro – a premier dining destination at 123 Gourmet Lane, Foodie City, offering a culinary journey of authentic European and American flavors. You can reach us at +9876543210. Our ambiance is perfect for romantic dinners and special events.",
+    "Our bistro is open to serve you Tuesday through Sunday, from 12 PM (noon) to 10 PM. Please note that we are closed on Mondays to prepare for the week ahead.",
+    "Reservations are highly recommended, especially on weekends and for large parties. You can secure a table by calling us directly at +9876543210 or by visiting our website: www.goldenforkbistro.com.",
+    
+    # --- Menu Section ---
+    "Our menu is crafted with care, using locally-sourced, fresh ingredients whenever possible. We cater to various dietary needs, including vegetarian, vegan, gluten-free, and nut-free options. Please inform your server of any allergies so we can ensure a safe and delicious meal for you.",
+    
+    "Signature Dishes: Our **Pan-Seared Salmon** ($28) is a masterpiece, served with a delicate lemon-dill sauce over a bed of roasted asparagus. For a truly gourmet experience, try our **Wagyu Beef Burger** ($32), featuring premium Wagyu beef, truffle aioli, and aged cheddar on a toasted brioche bun. Our **Classic Carbonara** ($24) is a guest favorite, made with authentic guanciale, egg yolk, and freshly grated Pecorino Romano cheese.",
+    
+    "Vegan and Vegetarian Delights: We offer several plant-based options. Our popular **Vegan Mushroom Risotto** ($22) is made with arborio rice, wild mushrooms, and a hint of truffle oil. The **Roasted Cauliflower Steak** ($20) is a hearty, flavorful dish served with a spicy romesco sauce and chickpeas.",
+    
+    "Appetizers: Start your meal with our classic **Bruschetta** ($12) topped with fresh heirloom tomatoes, basil, and a balsamic glaze. A must-try is our **Truffle Fries** ($15), perfectly seasoned and served with a side of truffle aioli. Our **Crisp Calamari** ($18) is fried to golden perfection and served with a spicy marinara sauce.",
+    
+    "Main Courses: Our **Filet Mignon** ($45) is a prime cut of beef, grilled to your preference and served with a rich red wine reduction. The **Roasted Chicken** ($26) is a half chicken, slow-cooked with aromatic herbs and garlic. For seafood lovers, the **Lobster Ravioli** ($38) is filled with fresh lobster and served in a creamy saffron sauce.",
+    
+    "Desserts: Indulge in our decadent **Chocolate Lava Cake** ($14), served warm with a scoop of premium vanilla bean ice cream. Our traditional **Crème brûlée** ($12) has a perfectly caramelized sugar crust. The **Tiramisu** ($13) is a classic Italian treat with espresso-soaked ladyfingers and sweet mascarpone cream.",
+    
+    "Kids' Menu: We have a simple menu for our younger guests, including **Chicken Tenders** with fries ($10) and **Mac & Cheese** ($9).",
+    
+    # --- Services Section ---
+    "Takeout and Delivery: Enjoy our dishes from the comfort of your home. We offer takeout and delivery services exclusively through our official website and trusted third-party partners like Uber Eats and DoorDash.",
+    
+    "Special Events: Join our **exclusive Wine Tasting Event** every Thursday from 6 PM to 8 PM. It's an intimate evening featuring a curated selection of fine wines from around the world. Tickets are $50 per person.",
+    "Our elegant dining atmosphere is perfect for special occasions. We also have a private dining room available for events and large parties. Please inquire about our catering services.",
+    
+    "Pricing: On average, our appetizers range from $12-$18, main courses from $20-$45, and desserts from $12-$15."
+]
+
+
+
+from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
+
+# Load a pre-trained sentence transformer model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Create embeddings for each document
+document_embeddings = model.encode(documents)
+
+# Convert to a numpy array for FAISS
+document_embeddings = np.array(document_embeddings).astype("float32")
+
+# Create a FAISS index and add the embeddings
+dimension = document_embeddings.shape[1]
+index = faiss.IndexFlatL2(dimension)
+index.add(document_embeddings)
+
+print(f"FAISS index created with {index.ntotal} vectors.")
+
+
+
+def retrieve_relevant_documents(query, top_k=2):
+    # Convert the user query to an embedding
+    query_embedding = model.encode([query])
+    query_embedding = np.array(query_embedding).astype("float32")
+
+    # Search the FAISS index for the top k most similar documents
+    distances, indices = index.search(query_embedding, top_k)
+
+    # Retrieve and return the relevant text from the documents list
+    relevant_chunks = [documents[i] for i in indices[0]]
+    return relevant_chunks
+
+
+import google.generativeai as genai
+from IPython.display import display, Markdown
+
+genai.configure(api_key="Here Your Gemini-Api-Key")
+
+# Set up the Generative Model
+model_gen = genai.GenerativeModel('gemini-1.5-flash')
+
+def generate_response(query):
+    # Step 1: Retrieve relevant documents
+    context = retrieve_relevant_documents(query)
+
+    # Step 2: Create a prompt with the user's question and the context
+    prompt = f"""
+    You are a helpful chatbot for Golden Fork Bistro.
+    Answer the user's question based ONLY on the following information.
+    If the information doesn't contain the answer, politely state that you don't have that information.
+    ---
+    Context:
+    {" ".join(context)}
+    ---
+    User Question:
+    {query}
+    ---
+    Answer:
+    """
+
+    # Step 3: Generate the response using the LLM
+    response = model_gen.generate_content(prompt)
+    return response.text
+
+
+Interface
+import gradio as gr
+import time
+css_style = """
+.gradio-container {
+    background: #f7f9fc;
+    font-family: 'Playfair Display', serif; /* A more elegant font */
+}
+.chatbot-container {
+    border-radius: 15px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    height: 100%;
+    padding: 20px;
+}
+h1 {
+    font-family: 'Playfair Display', serif;
+    color: #3e2723;
+    text-align: center;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+.gr-button.primary {
+    background-color: #3e2723 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, transform 0.2s;
+}
+.gr-button.primary:hover {
+    background-color: #5d4037 !important;
+    transform: translateY(-2px);
+}
+.gr-button.secondary {
+    background-color: #fafafa;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.9em;
+    padding: 8px 15px;
+    transition: background-color 0.2s, color 0.2s;
+}
+.gr-button.secondary:hover {
+    background-color: #e8e8e8;
+    color: #333;
+}
+.gr-textbox {
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    font-size: 1.1em;
+}
+.message {
+    border-radius: 20px;
+    padding: 15px 20px;
+    margin: 12px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 1em;
+    position: relative;
+}
+.user-message {
+    background-color: #ffe0b2;
+    text-align: right;
+    margin-left: auto;
+    color: #444;
+    border-bottom-right-radius: 5px;
+}
+.bot-message {
+    background-color: #e1f5fe;
+    text-align: left;
+    color: #444;
+    border-bottom-left-radius: 5px;
+}
+/* This creates a chat bubble arrow */
+.user-message::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 10px solid #ffe0b2;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-bottom-right-radius: 5px;
+}
+.bot-message::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-right: 10px solid #e1f5fe;
+    border-left: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-bottom-left-radius: 5px;
+}
+.input-area-sticky {
+    background-color: #fff;
+    padding: 25px;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+}
+.quick-questions-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+"""
+
+with gr.Blocks(css=css_style, theme=gr.themes.Soft()) as demo:
+    gr.HTML("<h1 style='color: #4B4B4B; text-align: center; font-size: 3em;'>🍽️ The Golden Fork Bistro 🍴</h1>")
+    gr.HTML("<p style='text-align: center; color: #795548; font-style: italic; font-weight: 500;'>Your personal guide to our menu and services. Ask me anything!</p>")
+    
+    with gr.Column(elem_classes="chatbot-container"):
+        with gr.Row():
+            gr.Markdown(
+                """
+                **👋 Welcome to our Chatbot!**
+
+                I'm here to help you with any questions about The Golden Fork Bistro.
+                Feel free to ask about our menu, hours, or how to make a reservation.
+                """,
+                elem_classes="welcome-message"
+            )
+        
+        chatbot = gr.Chatbot(
+            label="Chat History",
+            height=500,
+            elem_classes="chatbot",
+            avatar_images=(
+                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png", # A simple user icon
+                "https://cdn-icons-png.flaticon.com/512/4712/4712071.png" # A chef/bot icon
+            )
+        )
+
+        with gr.Row(elem_classes="quick-questions-container"):
+            quick_q1 = gr.Button("What are your hours?", variant="secondary")
+            quick_q2 = gr.Button("What are your popular dishes?", variant="secondary")
+            quick_q3 = gr.Button("How can I make a reservation?", variant="secondary")
+
+    with gr.Row(elem_classes="input-area-sticky"):
+        msg = gr.Textbox(
+            label="Your Message", 
+            placeholder="Ask me anything about The Golden Fork Bistro!",
+            elem_classes="gr-textbox",
+            container=False
+        )
+        send_btn = gr.Button("Send", variant="primary")
+        clear_btn = gr.Button("Clear")
+
+    def respond(message, chat_history):
+        # User message appears first
+        chat_history.append((message, None))
+        yield "", chat_history
+
+        # Bot is "Thinking..."
+        bot_thinking = "..."
+        chat_history.append((None, bot_thinking))
+        yield "", chat_history
+        time.sleep(1) # Simulate a delay for a better UX
+
+        # Generate the final response
+        bot_message = generate_response(message)
+        
+        # Replace the thinking message with the final response
+        chat_history[-1] = (None, bot_message)
+        yield "", chat_history
+
+    send_btn.click(respond, [msg, chatbot], [msg, chatbot])
+    clear_btn.click(lambda: (None, None), None, [msg, chatbot])
+    msg.submit(respond, [msg, chatbot], [msg, chatbot])
+    
+    quick_q1.click(lambda: "What are your hours?", None, msg)
+    quick_q2.click(lambda: "What are your popular dishes?", None, msg)
+    quick_q3.click(lambda: "How can I make a reservation?", None, msg)
+
+if __name__ == "__main__":
+    demo.launch(debug=True)
