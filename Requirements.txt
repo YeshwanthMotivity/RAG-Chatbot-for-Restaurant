@@ -1,0 +1,58 @@
+📦 Requirements & Their Purpose
+
+1. faiss
+What is it?
+FAISS (Facebook AI Similarity Search) is a library for efficient similarity search and clustering of dense vectors.
+Why is it used?
+It's used to store and search through high-dimensional text embeddings efficiently. When a user asks a question, FAISS quickly finds the most relevant documents from the dataset.
+
+
+2. sentence-transformers
+What is it?
+A Python library for creating sentence embeddings using pre-trained transformer models like MiniLM, BERT, etc.
+
+Why is it used?
+You used it to convert textual restaurant data (e.g., menu items, policies) into dense vectors for similarity search with FAISS.
+
+Model Used:
+sentence-transformers/all-MiniLM-L6-v2
+
+A lightweight and fast model ideal for semantic search tasks.
+It produces high-quality sentence embeddings with minimal resource usage.
+
+
+3. transformers
+What is it?
+A library from Hugging Face that provides access to pre-trained language models like GPT, BERT, etc.
+
+Why is it used?
+You used it to load and run DialoGPT-small, a conversational model that generates natural language responses.
+
+Model Used:
+microsoft/DialoGPT-small
+
+A fine-tuned version of GPT-2 optimized for dialogues and chatbot interactions.
+Used to generate human-like responses based on the retrieved data and user query.
+
+
+4. numpy
+What is it?
+A fundamental library for numerical operations in Python.
+Why is it used?
+Used for array manipulation, vector calculations, and general numerical processing during embedding and search operations.
+
+
+5. gradio (Optional, if used for interface)
+What is it?
+A tool to create interactive UIs for ML models quickly.
+Why is it used?
+If you’ve created a web interface for your chatbot, Gradio helps users interact with the bot easily via a simple web app.
+
+
+
+Requirements
+faiss
+sentence_transformers
+transformers
+numpy
+gradio
